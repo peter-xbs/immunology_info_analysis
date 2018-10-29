@@ -1,6 +1,5 @@
 # _*_ coding:utf-8 _*_
 
-import mygene
 import numpy as np
 
 genes = ["1460654_at","1460655_a_at",
@@ -38,6 +37,8 @@ def build_id_convert_dic(inputs):
 def convert_id_2_symbol_go(inputs, outputs, id_dic):
     with open(outputs, 'w') as fo:
         with open(inputs) as f:
+            gene2go_dic = {}
+            Set = set()
             for line in f:
                 if line.startswith('!') or not line.strip():
                     continue
@@ -47,19 +48,29 @@ def convert_id_2_symbol_go(inputs, outputs, id_dic):
                     continue
 
                 if affy_id.startswith('ID'):
-                    line_list.insert(0, 'Gene')
-                    line_list.extend(['gobp', 'gocc', 'gomf'])
+                    line_list[0] = 'Gene'
+                    # line_list.insert(0, 'Gene')
+                    # line_list.extend(['gobp', 'gocc', 'gomf'])
                     new_line = '\t'.join(line_list) + '\n'
                     fo.write(new_line)
                 else:
                     if affy_id in id_dic:
                         gene_symbol, gobp, gocc, gomf = id_dic[affy_id]
-                        line_list.insert(0, gene_symbol)
-                        line_list.extend([gobp, gocc, gomf])
+                        gene2go_dic[gene_symbol] = (gobp, gocc, gomf)
+                        gene_symbol = gene_symbol.split('///')[0].strip()
+                        if gene_symbol in Set or not gene_symbol:
+                            continue
+                        Set.add(gene_symbol)
+                        line_list[0] = gene_symbol
+                        # line_list.insert(0, gene_symbol)
+                        # line_list.extend([gobp, gocc, gomf])
                         new_line = '\t'.join(line_list) + '\n'
                         fo.write(new_line)
                     else:
                         print(affy_id)
+            with open('gene2go.pickle', 'wb') as fo:
+                import pickle
+                pickle.dump(gene2go_dic, fo)
 
 gse_output = 'GSE53986_series_matrix_format.txt'
 gse_filt_output = 'GSE53986_series_matrix_format_filt.txt'
@@ -67,7 +78,7 @@ with open(gse_output) as f, open(gse_filt_output, 'w') as fo:
     # key_words = ['immun', 'inflam', 'b cell', 't cell', 'macrophage',
     #              'neutrophil', 'natural killer cell', 'dendritic cell',
     #              'mitochondrial', 'reactive oxygen species']
-    key_words = ['immun', 'reactive oxygen species', 'mitochondrial']
+    key_words = ['macrophage', 'reactive oxygen species', 'mitochondrial']
     headers = [x.strip('"') for x in f.readline().split('\t')]
     header = headers[0]+'\t'+'\t'.join(headers[2:-3])+'\n'
     fo.write(header)
@@ -97,9 +108,9 @@ with open(gse_output) as f, open(gse_filt_output, 'w') as fo:
 if __name__ == '__main__':
     affy_dic_file = 'Affy_Mouse430_2.txt'
     gse_file = 'GSE53986_series_matrix.txt'
-    gse_output = 'GSE53986_series_matrix_format.txt'
-    # id_dic = build_id_convert_dic(affy_dic_file)
-    # convert_id_2_symbol_go(gse_file, gse_output, id_dic)
+    gse_output = 'GSE53986_series_matrix_format2.txt'
+    id_dic = build_id_convert_dic(affy_dic_file)
+    convert_id_2_symbol_go(gse_file, gse_output, id_dic)
 
 
 
