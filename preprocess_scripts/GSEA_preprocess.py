@@ -6,25 +6,31 @@ import os
 output = '../GSEA_PREPROCESS'
 if not os.path.exists(output):
     os.makedirs(output)
-src = 'GSE109279_series_matrix.txt'
-tgt = os.path.join(output,'GSE109279_series_matrix.gct')
-group = os.path.join(output,'GSE109279_series_matrix.cls')
+
+home_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+output_dir = os.path.join(home_dir, 'GSEA_PREPROCESS')
+input_name = 'GSE43075'
+src = os.path.join(home_dir, input_name+'_series_matrix.txt')
+tgt = os.path.join(output_dir, input_name+'_series_matrix.gct')
+group = os.path.join(output_dir,input_name+'_series_matrix.cls')
 
 # group_set = [0,0,0,0,'x','x','x','x',1,1,1,1,'x','x','x','x'] # gse53986
 # group_set = [0,0,0,1,1,1,'x','x','x','x','x','x'] # gse30552
 # group_set = [0,0,0,0,0,1,1,1,1,1] # 27309
-group_set = [0,0,0,1,1]
+group_set = [1,1,1,0,0,0]
+group_name = ["LPS", "LPS", "LPS", "Control", "Control","Control"]
+group_comm = ["lps", "control"]
 
 
 revise_group = [idx+1 for idx, item in enumerate(group_set) if item == 0 or item == 1]
 
 with open(group, 'w') as fo:
-    group_control = ['control' for item in group_set if item == 0]
-    group_exp = ['exp' for item in group_set if item == 1]
-    group_ = group_control + group_exp
-    header_line = '\t'.join([str(len(group_)), '2', '1'])+'\n'
-    comm_line = '\t'.join(['#', 'Control', 'Exp'])+'\n'
-    line = '\t'.join(group_)+'\n'
+    #group_control = [group_name[idx] for idx,item in enumerate(group_set) if item == 0]
+    #group_exp = [group_name[idx] for idx, item in enumerate(group_set) if item == 1]
+    #group_ = group_control + group_exp
+    header_line = '\t'.join([str(len(group_name)), '2', '1'])+'\n'
+    comm_line = '\t'.join(['#']+group_comm)+'\n'
+    line = '\t'.join(group_name)+'\n'
     fo.write(header_line)
     fo.write(comm_line)
     fo.write(line)
