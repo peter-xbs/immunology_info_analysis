@@ -9,7 +9,20 @@ import requests
 
 import pickle
 
-with open('gene2go.pickle', 'rb') as f:
+#
+# with open('illum_mus_ref8_v2.anno') as f:
+#     with open('illum_mus_ref8_v2.pickle', 'wb') as fo:
+#         dic = {}
+#         for line in f:
+#             line_list = line.strip().split('\t')
+#             if len(line_list) < 2:
+#                 continue
+#             ID, gene = line_list[0], line_list[1]
+#             dic[ID] = gene
+#         pickle.dump(dic, fo)
+
+with open('config/gene2go.pickle', 'rb') as f:
     dic = pickle.load(f)
-    for key in dic.items():
-        print(key)
+    for key in dic:
+        print(len(dic[key]))
+

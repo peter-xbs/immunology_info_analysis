@@ -9,18 +9,23 @@ if not os.path.exists(output):
 
 home_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 output_dir = os.path.join(home_dir, 'GSEA_PREPROCESS')
-input_name = 'GSE43075'
+input_name = 'GSE72518'
 src = os.path.join(home_dir, input_name+'_series_matrix.txt')
 tgt = os.path.join(output_dir, input_name+'_series_matrix.gct')
 group = os.path.join(output_dir,input_name+'_series_matrix.cls')
 
 # group_set = [0,0,0,0,'x','x','x','x',1,1,1,1,'x','x','x','x'] # gse53986
 # group_set = [0,0,0,1,1,1,'x','x','x','x','x','x'] # gse30552
-# group_set = [0,0,0,0,0,1,1,1,1,1] # 27309
-group_set = [1,1,1,0,0,0]
-group_name = ["LPS", "LPS", "LPS", "Control", "Control","Control"]
-group_comm = ["lps", "control"]
-
+# group_set = [0,0,0,0,0,1,1,1,1,1] # 27309z
+# group_set = [1,1,1,0,0,0] # GSE43075
+# group_name = ["LPS", "LPS", "LPS", "Control", "Control","Control"]
+# group_comm = ["lps", "control"]
+# group_set = [1, 1, 3, 3, 3, 3, 3, 0, 0, 0] # GSE60290
+# group_name = ["lps", "lps", "control", "control", "control"]
+# group_comm =["lps", "control"]
+group_set = [0, 0, 0, 0, 0, 1, 1, 1, 3, 3, 3]  # GSE53986
+group_name = ["ctrl", "ctrl", "ctrl", "ctrl", "ctrl", "IL4", "IL4", "IL4"]
+group_comm = ["control", "lps"]
 
 revise_group = [idx+1 for idx, item in enumerate(group_set) if item == 0 or item == 1]
 

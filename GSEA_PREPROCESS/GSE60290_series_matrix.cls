@@ -1,3 +1,3 @@
 5	2	1
-#	exp	control
-exp	exp	control	control	control
+#	lps	control
+lps	lps	control	control	control
